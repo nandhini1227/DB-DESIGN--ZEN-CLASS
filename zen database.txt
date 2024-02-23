@@ -1,0 +1,134 @@
+CREATE DATABASE IF NOT EXISTS your_database_name;
+USE your_database_name;
+CREATE TABLE IF NOT EXISTS `studentinfo` (
+  `studentid` INT PRIMARY KEY AUTO_INCREMENT,
+  `studentname` VARCHAR(255),
+  `mobilenumber` VARCHAR(255) UNIQUE,
+  `email` VARCHAR(255) UNIQUE,
+  `mentorname` VARCHAR(255),
+  `batchid` INT,
+  `batchname` VARCHAR(255),
+  `active` BOOLEAN,
+  `notes` TEXT,
+  `tags` TEXT,
+  `skill_level` VARCHAR(20),
+  `specialization` VARCHAR(50),
+  `graduation_year` INT,
+  `emergency_contact` VARCHAR(20),
+  `graduation_status` VARCHAR(20),
+  `preferred_language` VARCHAR(20)
+);
+
+CREATE TABLE IF NOT EXISTS `taskinfo` (
+  `taskid` INT PRIMARY KEY AUTO_INCREMENT,
+  `taskname` VARCHAR(255) UNIQUE,
+  `studentid` INT,
+  `mentorid` INT,
+  `mentorname` VARCHAR(25),
+  `batchname` VARCHAR(50),
+  `notes` TEXT,
+  `tags` TEXT,
+  `completion_date` DATE,
+  `priority` VARCHAR(10),
+  `resolved` BOOLEAN,
+  `response_text` TEXT
+);
+
+CREATE TABLE IF NOT EXISTS `mentorinfo` (
+  `mentorid` INT PRIMARY KEY AUTO_INCREMENT,
+  `email` VARCHAR(50) UNIQUE,
+  `contactno` VARCHAR(15) UNIQUE,
+  `assignedbatch` VARCHAR(100),
+  `active` BOOLEAN,
+  `expertise_area` VARCHAR(50)
+);
+
+CREATE TABLE IF NOT EXISTS `batchinfo` (
+  `batchid` INT PRIMARY KEY AUTO_INCREMENT,
+  `batchname` VARCHAR(255),
+  `totalstudents` INT,
+  `mentorid` INT,
+  `active` BOOLEAN,
+  `batch_start_date` DATE
+);
+
+CREATE TABLE IF NOT EXISTS `queryinfo` (
+  `queryid` INT PRIMARY KEY AUTO_INCREMENT,
+  `querytext` TEXT,
+  `studentid` INT,
+  `mentorid` INT,
+  `notes` TEXT,
+  `tags` TEXT,
+  `resolved` BOOLEAN,
+  `response_text` TEXT
+);
+
+CREATE TABLE IF NOT EXISTS `dashboardinfo` (
+  `dashboardid` INT PRIMARY KEY AUTO_INCREMENT,
+  `studentid` INT,
+  `mentorid` INT,
+  `batchid` INT
+);
+
+CREATE TABLE IF NOT EXISTS `mockinterviewinfo` (
+  `mockinterviewid` INT PRIMARY KEY AUTO_INCREMENT,
+  `studentid` INT,
+  `mentorid` INT,
+  `batchid` INT
+);
+
+CREATE TABLE IF NOT EXISTS `AttendanceInfo` (
+  `student_id` INT,
+  `date` DATE,
+  `attendance_status` VARCHAR(10),
+  `reason_for_absence` VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS `ResourceInfo` (
+  `resource_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `resource_type` VARCHAR(50),
+  `title` VARCHAR(100),
+  `description` TEXT,
+  `link` VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS `PerformanceInfo` (
+  `student_id` INT,
+  `assessment_type` VARCHAR(50),
+  `score` DECIMAL(5, 2),
+  `assessment_date` DATE,
+  `mentor_feedback` TEXT
+);
+
+CREATE TABLE IF NOT EXISTS `PlacementInfo` (
+  `student_id` INT,
+  `company_name` VARCHAR(100),
+  `job_title` VARCHAR(100),
+  `salary` DECIMAL(10, 2),
+  `start_date` DATE
+);
+
+CREATE TABLE IF NOT EXISTS `FeedbackInfo` (
+  `feedback_type` VARCHAR(20),
+  `feedback_text` TEXT,
+  `feedback_date` DATE,
+  `person_id` INT
+);
+
+
+
+ALTER TABLE `studentinfo` ADD FOREIGN KEY (`batchid`) REFERENCES `batchinfo` (`batchid`);
+ALTER TABLE `taskinfo` ADD FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`);
+ALTER TABLE `taskinfo` ADD FOREIGN KEY (`mentorid`) REFERENCES `mentorinfo` (`mentorid`);
+ALTER TABLE `batchinfo` ADD FOREIGN KEY (`mentorid`) REFERENCES `mentorinfo` (`mentorid`);
+ALTER TABLE `queryinfo` ADD FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`);
+ALTER TABLE `queryinfo` ADD FOREIGN KEY (`mentorid`) REFERENCES `mentorinfo` (`mentorid`);
+ALTER TABLE `dashboardinfo` ADD FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`);
+ALTER TABLE `dashboardinfo` ADD FOREIGN KEY (`mentorid`) REFERENCES `mentorinfo` (`mentorid`);
+ALTER TABLE `dashboardinfo` ADD FOREIGN KEY (`batchid`) REFERENCES `batchinfo` (`batchid`);
+ALTER TABLE `mockinterviewinfo` ADD FOREIGN KEY (`studentid`) REFERENCES `studentinfo` (`studentid`);
+ALTER TABLE `mockinterviewinfo` ADD FOREIGN KEY (`mentorid`) REFERENCES `mentorinfo` (`mentorid`);
+ALTER TABLE `mockinterviewinfo` ADD FOREIGN KEY (`batchid`) REFERENCES `batchinfo` (`batchid`);
+
+
+COMMIT;
